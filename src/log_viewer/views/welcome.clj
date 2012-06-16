@@ -2,8 +2,7 @@
  (:require [log-viewer.views.common :as common]
            [noir.content.getting-started]
            [noir.session :as session])
- (:use log-viewer.views.helpers noir.core [hiccup core page form])
- )
+ (:use log-viewer.views.helpers noir.core [hiccup core page form]))
 
 
 (defpage "/" params
@@ -19,4 +18,3 @@
   (navigate params)    
   (when (:reload params) (load-logs params))  
   (render "/" params))
-

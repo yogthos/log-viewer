@@ -11,7 +11,7 @@
 (declare display-message)
 
 (defn display-map [m]
- (into [:table.map] (for [[k v] m] [:tr [:td (name k)] [:td (display-message v)]])))
+  (into [:table.map] (for [[k v] m] [:tr [:td (when k (name k))] [:td (display-message v)]])))
 
 (defn display-coll [xs]
  (into [:table] (for [x xs] [:tr [:td (display-message x)]])))
