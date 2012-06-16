@@ -96,13 +96,12 @@
                        "start" 0
                        "backward" (- pos logs-per-page)
                        "forward"  (+ pos logs-per-page))          
-              new-pos (cond (< offset 0) 0                        
-                            (>= offset logs-size) (dec logs-size)                             
-                            :else offset)]          
-          (session/put! :cur-view (subvec logs new-pos
-                                          (if (>= (+ new-pos logs-per-page) logs-size)
-                                               logs-size (+ new-pos logs-per-page))))
-          (session/put! :position new-pos))
+              range-start (cond (< offset 0) 0                        
+                                (>= offset logs-size) (dec logs-size)                             
+                                :else offset)
+              range-end (+ range-start logs-per-page)]          
+          (session/put! :cur-view (subvec logs range-start (if (>= range-end logs-size) logs-size range-end)))
+          (session/put! :position range-start))
         (session/put! :cur-view logs)))))
 
 
