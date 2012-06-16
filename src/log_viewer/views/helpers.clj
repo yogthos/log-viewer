@@ -4,7 +4,7 @@
   (:import [java.util Calendar Date]))
 
 (def log-file "../clj-log/test.log")
-(def max-logs 500)
+(def max-logs 1000)
 (def logs-per-page 50)
 
 
@@ -40,12 +40,13 @@
 
 (defn render-logs []  
   (into
-    [:table.logs 
-     [:tr [:th.level-sort "level"] [:th "message"] [:th.time-sort "time"]]
+    [:table.logs
      [:tr 
       [:td (nav-form :backward)]  
       [:td {:align "right"} (position-in-logs)] 
-      [:td {:align "right"} (nav-form :forward)]]]
+      [:td {:align "right"} (nav-form :forward)]]
+     [:tr [:th.level-sort "level"] [:th "message"] [:th.time-sort "time"]]
+     ]
     (for [[i log] (session/get :cur-view)]
       (let [{:keys [ns time message level pattern exception]} log
             row-class (if (even? i) "even" "odd")
@@ -97,8 +98,7 @@
                        "forward"  (+ pos logs-per-page))          
               new-pos (cond (< offset 0) 0                        
                             (>= offset logs-size) (dec logs-size)                             
-                            :else offset)]
-          (println new-pos)
+                            :else offset)]          
           (session/put! :cur-view (subvec logs new-pos
                                           (if (>= (+ new-pos logs-per-page) logs-size)
                                                logs-size (+ new-pos logs-per-page))))
