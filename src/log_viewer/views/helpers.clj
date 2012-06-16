@@ -36,7 +36,7 @@
   (let [log-count (count (session/get :logs))
         position (inc (session/get :position))
         results-per-page (+ position (dec logs-per-page))]
-    (str position " - " (if (> results-per-page log-count) log-count results-per-page) " of " log-count)))
+    (str "displaying " position " - " (if (> results-per-page log-count) log-count results-per-page) " of " log-count)))
 
 (defn render-logs []  
   (into
@@ -44,7 +44,7 @@
      [:tr [:th.level-sort "level"] [:th "message"] [:th.time-sort "time"]]
      [:tr 
       [:td (nav-form :backward)]  
-      [:td {:align "center"} (position-in-logs)] 
+      [:td {:align "right"} (position-in-logs)] 
       [:td {:align "right"} (nav-form :forward)]]]
     (for [[i log] (session/get :cur-view)]
       (let [{:keys [ns time message level pattern exception]} log
@@ -123,3 +123,4 @@
   (session/put! :position 0)
   (session/put! :logs (vec (map-indexed vector (reverse (read-log log-file (log-filter params) max-logs)))))
   (navigate {:nav "start"}))
+
