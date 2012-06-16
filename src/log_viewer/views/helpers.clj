@@ -32,12 +32,20 @@
            (hidden-field "nav" (name direction))
            (submit-button (if (= :forward direction) ">" "<"))))
 
+(defn position-in-logs []
+  (let [log-count (count (session/get :logs))
+        position (inc (session/get :position))
+        results-per-page (+ position (dec logs-per-page))]
+    (str position " - " (if (> results-per-page log-count) log-count results-per-page) " of " log-count)))
 
 (defn render-logs []  
   (into
     [:table.logs 
-     [:tr [:th "level"] [:th "message"] [:th "time"]]
-     [:tr [:td (nav-form :backward)]  [:td] [:td {:align "right"} (nav-form :forward)]]]
+     [:tr [:th.level-sort "level"] [:th "message"] [:th.time-sort "time"]]
+     [:tr 
+      [:td (nav-form :backward)]  
+      [:td {:align "center"} (position-in-logs)] 
+      [:td {:align "right"} (nav-form :forward)]]]
     (for [[i log] (session/get :cur-view)]
       (let [{:keys [ns time message level pattern exception]} log
             row-class (if (even? i) "even" "odd")
@@ -88,11 +96,12 @@
                        "backward" (- pos logs-per-page)
                        "forward"  (+ pos logs-per-page))          
               new-pos (cond (< offset 0) 0                        
-                            (>= offset (- logs-size logs-per-page)) 
-                            (dec (- logs-size logs-per-page))
+                            (>= offset logs-size) (dec logs-size)                             
                             :else offset)]
-          
-          (session/put! :cur-view (subvec logs new-pos (+ new-pos logs-per-page)))
+          (println new-pos)
+          (session/put! :cur-view (subvec logs new-pos
+                                          (if (>= (+ new-pos logs-per-page) logs-size)
+                                               logs-size (+ new-pos logs-per-page))))
           (session/put! :position new-pos))
         (session/put! :cur-view logs)))))
 

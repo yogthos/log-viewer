@@ -11,6 +11,5 @@ $(document).ready(function(){
  			     this.expanded = true;
  			  } 			  
 	        });});
-  		    
   });
 
