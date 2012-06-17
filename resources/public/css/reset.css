@@ -46,6 +46,23 @@ table.map td {
 	background: #EDFDED;
 }
 
+div.left {
+	float:left; 
+	width:43%;
+}
+
+div.right {
+	float:right; 	
+}
+
+.time {
+	width: 20%;
+}
+
+.level {
+	width: 5%;
+}
+
 .fatal { color:red; font-weight: bold;}
 .error { color:red;}
 .warn { color:orange;}

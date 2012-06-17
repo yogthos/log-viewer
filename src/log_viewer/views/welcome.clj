@@ -10,7 +10,7 @@
     (load-logs params))
   (common/layout
     [:h2 "Log: " log-file " up to " max-logs " results"]
-    (log-filter-form (:filter-time params) (:filter-text params) (:filter-level params))
+    (log-filter-form (:filter-time params) (:filter-text params) (:filter-level params))    
     (render-logs)))
 
 

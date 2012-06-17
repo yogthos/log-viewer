@@ -32,29 +32,32 @@
            (hidden-field "nav" (name direction))
            (submit-button (if (= :forward direction) ">" "<"))))
 
+
 (defn position-in-logs []
   (let [log-count (count (session/get :logs))
         position (inc (session/get :position))
         results-per-page (+ position (dec logs-per-page))]
     (str "displaying " position " - " (if (> results-per-page log-count) log-count results-per-page) " of " log-count)))
 
-(defn render-logs []  
+
+(defn render-logs []   
   (into
     [:table.logs
-     [:tr 
-      [:td (nav-form :backward)]  
-      [:td {:align "right"} (position-in-logs)] 
-      [:td {:align "right"} (nav-form :forward)]]
-     [:tr [:th.level-sort "level"] [:th "message"] [:th.time-sort "time"]]
+     [:tr
+      [:td  {:colspan "3"} 
+       [:div.left  (nav-form :backward)] 
+       [:div.left  (position-in-logs)] 
+       [:div.right  (nav-form :forward)]]]
+     [:tr [:th.level-sort "level"] [:th.time-sort "time"] [:th "message"]]
      ]
     (for [[i log] (session/get :cur-view)]
       (let [{:keys [ns time message level pattern exception]} log
             row-class (if (even? i) "even" "odd")
             message-td [:td (display-message message)]]
-        [:tr {:class row-class} 
-         [:td {:class level} level] 
-         (if exception (conj message-td (display-exception exception)) message-td) 
-         [:td time]]))))
+        [:tr {:class row-class}         
+         [:td {:class (str "level " (name level))} level]
+         [:td.time time]
+         (if exception (conj message-td (display-exception exception)) message-td)]))))
 
 
 (defn log-filter-form [filter-time filter-text filter-level]
