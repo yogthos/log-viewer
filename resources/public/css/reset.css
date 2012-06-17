@@ -30,12 +30,20 @@ table.map td {
     padding: 4px;    
 }
 
-.collapsable {
+.collapsable-ex {
+    cursor:pointer;     
+}
+
+.collapsable-message {
     cursor:pointer;     
 }
 
 .collapsed {
     display: none;
+}
+
+.collapsed-info {
+	display: none;
 }
 
 .odd {

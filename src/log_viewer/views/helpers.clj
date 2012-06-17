@@ -17,7 +17,7 @@
  (into [:table] (for [x xs] [:tr [:td (display-message x)]])))
 
 (defn display-exception [ex]
-  [:div.collapsable "Exception trace (click to toggle)" 
+  [:div.collapsable-ex "Exception trace..." 
    [:div.collapsed (display-message ex)]])
 
 (defn display-message [message]
@@ -48,12 +48,12 @@
        [:div.left  (nav-form :backward)] 
        [:div.left  (position-in-logs)] 
        [:div.right  (nav-form :forward)]]]
-     [:tr [:th.level-sort "level"] [:th.time-sort "time"] [:th "message"]]
+     [:tr [:th.level-sort "level"] [:th.time-sort "time"] [:th "log"]]
      ]
     (for [[i log] (session/get :cur-view)]
       (let [{:keys [ns time message level pattern exception]} log
             row-class (if (even? i) "even" "odd")
-            message-td [:td (display-message message)]]
+            message-td [:td [:div.collapsable-message [:div (display-message message)]]]]
         [:tr {:class row-class}         
          [:td {:class (str "level " (name level))} level]
          [:td.time time]
