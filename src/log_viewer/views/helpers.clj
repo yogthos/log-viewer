@@ -123,6 +123,6 @@
 
 (defn load-logs [params]
   (session/put! :position 0)
-  (session/put! :logs (vec (map-indexed vector (reverse (read-log log-file (log-filter params) max-logs)))))
+  (session/put! :logs (vec (map-indexed vector (read-log log-file (log-filter params) max-logs))))
   (navigate {:nav "start"}))
 
