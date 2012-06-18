@@ -26,6 +26,15 @@ $(document).ready(function(){
  			     $(this).append("<div id='info'>click to view</div>"); 			     
  			     this.collapsed = true;
  			  } 			  
-	        });});       
+	        });});    
+	        
+	  $(".searchable")
+ 		.each(function(){
+ 			$(this).click(function(e) {setFilter($(this).html());
+ 			e.stopPropagation();});
+ 		});         
   });
 
+function setFilter(text) {
+    $("#filter-text").val(text);
+}

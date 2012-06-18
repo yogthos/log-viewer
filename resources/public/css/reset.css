@@ -46,6 +46,10 @@ table.map td {
 	display: none;
 }
 
+.searchable {
+	text-decoration:underline;
+}
+
 .odd {
 	background: white;
 }

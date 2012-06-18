@@ -11,7 +11,11 @@
 (declare display-message)
 
 (defn display-map [m]
-  (into [:table.map] (for [[k v] m] [:tr [:td (when k (name k))] [:td (display-message v)]])))
+  (into [:table.map]
+        (for [[k v] m]
+          [:tr [:td (when k (name k))] 
+           (let [val (display-message v)]
+             [(if (string? val) :td.searchable :td) val])])))
 
 (defn display-coll [xs]
  (into [:table] (for [x xs] [:tr [:td (display-message x)]])))
@@ -24,7 +28,7 @@
  (cond
    (map? message) (display-map message)
    (coll? message) (display-coll message)
-   :else message))
+   :else [:div.searchable message]))
 
 
 (defn nav-form [direction]
@@ -117,8 +121,19 @@
         (if (and filter-level (not= "all" filter-level))
           (= filter-level (name level)) true)
         (if (and filter-text (not-empty filter-text))
-          (.contains (.toLowerCase (.toString message)) (.toLowerCase filter-text)) true)
+          (some true?
+                (for [word (.split (.toLowerCase filter-text) " ")] 
+                  (.contains (.toLowerCase (.toString message)) word)))
+           true)
         (if date (.after time date) true)))))
+
+
+(let [filter-text "foo bar baz"
+      message "Zar bar gar"] 
+  (some true?
+        (for [word (.split (.toLowerCase filter-text) " ")] 
+          (.contains (.toLowerCase message) word))))
+
 
 
 (defn load-logs [params]
