@@ -5,7 +5,7 @@ logs containing any of the matches will be displayed.
 
 ## Usage
 
-set `log-file` in log-viewer.views.helpers to the location of your log 
+set `log-file` in `log-viewer.views.helpers` to the location of your log 
 
 ```clojure
 (def log-file "path/to/the/log")
