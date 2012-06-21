@@ -94,22 +94,26 @@
 
 
 (defn navigate [{direction :nav}]
-  (when direction
-    (let [logs (session/get :logs)] 
-      (if (> (count logs) logs-per-page)
-        (let [logs-size (count logs)
-              pos (session/get :position)
-              offset (condp = direction
-                       "start" 0
-                       "backward" (- pos logs-per-page)
-                       "forward"  (+ pos logs-per-page))          
-              range-start (cond (< offset 0) 0                        
-                                (>= offset logs-size) (dec logs-size)                             
-                                :else offset)
-              range-end (+ range-start logs-per-page)]          
-          (session/put! :cur-view (subvec logs range-start (if (>= range-end logs-size) logs-size range-end)))
-          (session/put! :position range-start))
-        (session/put! :cur-view logs)))))
+ (when direction
+   (let [logs (session/get :logs)]
+     (if (> (count logs) logs-per-page)
+       (let [logs-size (count logs)
+             pos (session/get :position)
+             offset (condp = direction
+                      "start" 0
+                      "backward" (- pos logs-per-page)
+                      "forward"  (+ pos logs-per-page))
+             range-start (cond (< offset 0) 0
+                               (>= offset logs-size) pos
+                               :else offset)
+             range-end (+ range-start logs-per-page)]
+
+         (session/put! :cur-view 
+                       (if (= 0 logs-size)
+                         logs
+                         (subvec logs range-start (if (>= range-end logs-size) logs-size range-end))))
+         (session/put! :position range-start))
+       (session/put! :cur-view logs)))))
 
 
 (defn log-filter [params]  
@@ -136,7 +140,7 @@
 
 
 
-(defn load-logs [params]
+(defn load-logs [params]  
   (session/put! :position 0)
   (session/put! :logs (vec (map-indexed vector (read-log log-file (log-filter params) max-logs))))
   (navigate {:nav "start"}))
