@@ -10,5 +10,4 @@
      (include-css "/css/reset.css")
      (include-js "/js/jquery.js"
                  "/js/site.js")]
-    [:body
-     content]))
+    [:body content]))
